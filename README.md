@@ -23,40 +23,101 @@ A new startup business in North America has recruited you to help with the launc
 
 Please complete this project before continuing "[Hosting A Static Website With AWS S3](https://github.com/ok4chisom/01-Hosting-A-Static-Website-on-S3)"
 
-If you don't have a domain name registered, register a domain name using these steps https://aws.amazon.com/getting-started/hands-on/get-a-domain/ (Note that this cost $12 per year in the US). If you have a Domain name registered, skip to step 3.
 
-Use the previous article "link" to create an s3 bucket configured to host a static website.
-- Note that the bucket name must be the same as your domain or subdomain name. For example, if your domain name is test.example.com, your S3 bucket name should be "test.example.com"
-
-Navigate back to Route 53
-
-Select "Hosted zones": <br/>
-<img src="https://i.imgur.com/kzea1kK.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+First test the latency of your website by pasting the domain into this url: https://tools.keycdn.com/performance: <br/>
+<img src="https://i.imgur.com/L7ez2kG.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
-Select your created "Hosted zone name" and select "Create record":  <br/>
-<img src="https://i.imgur.com/iusXmTn.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+Navigate to Cloudfront and select "Create Distribution"
+
+Under "Origin" select the S3 bucket hosting your website
+
+You will get a get prompted to "Use website endpoint" since your bucket is hosting a static website. Do not select  it. This will be useful when we want to enable origin access identity (OAI):  <br/>
+<img src="https://i.imgur.com/s1rZh00.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
-Choose your record name (should be same the as your S3 bucket)
-
-Toggle on Alias
-
-Select Alias to S3 website Endpoint
-
-Select your S3 bucket
-
-Select your routing policy (in this case I used the Simple routing policy):  <br/>
-<img src="https://i.imgur.com/Saj0Exw.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+Under "Origin access" select "Origin access control"
+- Select "create control setting", keep defaults and select "create"
+- Select "Yes, update the bucket policy"
+<img src="https://i.imgur.com/S7nQ5RT.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+<br />
+Under "Viewer" select "Redirect HTTP to HTTPS" and  "GET,HEAD"
+- This ensures that viewers are viewing the content from a secure layer
+- Users are only view the content
+<img src="https://i.imgur.com/xBOabH0.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
 
-Select create record
+Under "Cache Key and origin requests" select "Cach policy and origin request policy" and "CachingOptimized":  <br/>
+<img src="https://i.imgur.com/SZqFka1.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+<br />
 
-Now type in your domain name into the browser and you should be routed to your website <br/>
-<img src="https://i.imgur.com/Ou1J7rp.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+Under settings select "Use all edge locations" <br/>
+<img src="https://i.imgur.com/FKNMaji.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
+
+Select "Create Distribution" <br/>
+
+
+Copy the S3 policy statement provided by CloudFront for your S3 bucket <br/>
+- This gives CloudFront read access to your S3 bucket
+<img src="https://i.imgur.com/JPjyski.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+<br />
+
+Navigate to your S3 bucket and block all public access under "permissions" <br/>
+- This is so that the website can only be access via cloudfront
+
+Replace your bucket policy with the copied policy. Similar to below <br/>
+<img src="https://i.imgur.com/FKNMaji.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+<br />
+
+Test that CloudFront is now distributing your website by copying the distribution ARN with/index.html and the website should populate. <br/>
+
+Now Create SSL Certificate by going to AWS Certificate Manager and selecting "Request" <br/>
+- This ensure that your website is encrypted
+
+Select Next. Type your domain name, Email verification and RSA 2048. Then select "Request" <br/>
+
+Once you have validated it from your email you will have access to the SSL certificate <br/>
+
+Create custom domain name by navigating back to your CloudFront Distribution <br/>
+
+On the "General" tab, choose "Edit". <br/>
+
+Add your custom domain name <br/>
+
+Select your SSL certificate
+
+Specify "Default root object" as "index.html"
+- So that you don't always have to specify the file to access
+
+Navigate to Rout 53 to create a new A record that points to the CloudFront distribution
+
+Name your record. Ensure it is the same name as your custom domain name
+
+Select "A" as Record type and toggle "Alias" on
+
+Select "Alias to CloudFront distribution", leave the "Simple routing" policy and select "Create Record"
+
+Now test that your domain name is working and secure on your browser <br/>
+<img src="https://i.imgur.com/yTyuNEs.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+<br />
+
+Finally now test latency of your website again <br/>
+- Test 1 - Notice the latency is similar to what we had in the beginning
+    <img src="https://i.imgur.com/FKNMaji.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+- Test 2 - Now notice that the latency is much lower meaning that our CloudFront distribution is working
+    <img src="https://i.imgur.com/SYXSo2c.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+    <br />
+    <br />
+
+
 <!--
  ```diff
 - text in red
