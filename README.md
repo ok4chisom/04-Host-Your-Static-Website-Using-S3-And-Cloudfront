@@ -72,7 +72,7 @@ Navigate to your S3 bucket and block all public access under "permissions" <br/>
 - This is so that the website can only be access via cloudfront
 
 Replace your bucket policy with the copied policy. Similar to below <br/>
-<img src="https://i.imgur.com/FKNMaji.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<img src="https://i.imgur.com/QlwiFdJ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
 
@@ -111,7 +111,7 @@ Now test that your domain name is working and secure on your browser <br/>
 
 Finally now test latency of your website again <br/>
 - Test 1 - Notice the latency is similar to what we had in the beginning
-    <img src="https://i.imgur.com/FKNMaji.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+    <img src="https://i.imgur.com/PUXb2y0.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 - Test 2 - Now notice that the latency is much lower meaning that our CloudFront distribution is working
     <img src="https://i.imgur.com/SYXSo2c.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
     <br />
