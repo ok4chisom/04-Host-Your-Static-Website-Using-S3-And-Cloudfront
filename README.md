@@ -1,10 +1,10 @@
 <h1>Hosting Your Static Website Using S3 and Cloudfront</h1>
 <!--
  ### [YouTube Demonstration](https://youtu.be/7eJexJVCqJo)
---!>
+
 <h2>Description</h2>
 A new startup business in North America has recruited you to help with the launch of a quick-access, low-cost static website. You've decided to complete this contract by hosting and deploying their website utilizing AWS S3
-<br />
+-->
 
 <b>Cloud Front is a content delivery network that allows to you distribute your content (in this case a website) to edge locations around the world. This reduces the latency when requests are made by users globally
 
